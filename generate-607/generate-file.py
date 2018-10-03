@@ -12,20 +12,26 @@ file_name = 'Preparació Envio Formato 607.xlsx'
 
 @timer
 def get_template(file_name):
-    print('create instance')
     new_file = Workbook(write_only=True)
     print('load wb')
-    new_file = load_workbook(file_name)
-    print('get sheet')
-    sheet = new_file.active
-    print('set value')
-    sheet['C6'] = 100
-    print('save file')
-    new_file.save(destination_file)
-    print('file saved')
+    return load_workbook(file_name)
     #print(type(new_file))  # openpyxl.workbook.workbook.Workbook
 
-get_template(file_name)
+@timer
+def write_report(workbook: Workbook):
+    sheet = workbook.active
+    sheet['C6'] = 100
+
+@timer
+def save_report(workbook: Workbook, new_file_name):
+    if os.path.isfile(new_file_name):
+        os.remove(new_file_name)
+    
+    workbook.save(new_file_name)
+
+wb = get_template(file_name)
+write_report(wb)
+save_report(wb, destination_file)
 
 
 # @timer
